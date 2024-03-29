@@ -4,10 +4,16 @@ using lms_b.Endpoints;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-string ConnectionString = builder.Configuration.GetConnectionString("MySqlConnection") 
+string ConnectionString = Environment.GetEnvironmentVariable("DBConn") 
     ?? throw new Exception("Database Connection Failed: No SQL connection string found!");
 
-AppDbContext.CreateDBContext(ConnectionString);
+try {
+
+    AppDbContext.CreateDBContext(ConnectionString);
+
+} catch(Exception e) {
+    Console.WriteLine(e);
+}
 
 app.MapCoursesEndpoints();
 
