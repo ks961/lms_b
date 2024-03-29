@@ -1,0 +1,32 @@
+# Build artifacts
+**/bin/
+**/obj/
+
+# Temporary files
+**/.vs/
+**/.vscode/
+
+# IDE and OS specific
+*.suo
+*.user
+*.sln1
+*.DotSettings.user
+
+# Test results
+**/TestResults/
+
+# Secret files
+*.secrets.json
+
+# NuGet packages (managed by NuGet itself)
+**/packages/
+
+# Ignore any local development configuration files
+**/appsettings.Development.json
+**/launchSettings.json
+
+# MSBuild logs
+**/msbuild.log
+
+# User specific file for global tools (e.g., dotnet)
+~/.dotnet/tools
