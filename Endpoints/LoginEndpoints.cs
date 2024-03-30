@@ -1,14 +1,18 @@
-﻿namespace lms_b;
+﻿using lms_b.Middlewares;
+
+namespace lms_b;
 
 public static class LoginEndpoints
 {
     public static RouteGroupBuilder MapLoginEndpoints(this WebApplication app)
     {
-        var RouteGroup = app.MapGroup("login");
+        RouteGroupBuilder RouteGroup = app.MapGroup("login");
 
-        app.MapPost("/", () => {
-            
-        });
+        RouteGroup.MapPost("/", () => {
+            Console.WriteLine("Login route");
+
+            return Results.Ok();
+        }).AddEndpointFilter(AuthMiddleware.Authenticate);
 
         return RouteGroup;
     }

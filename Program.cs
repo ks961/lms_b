@@ -15,8 +15,8 @@ try {
     Console.WriteLine(e);
 }
 
+app.MapLoginEndpoints();
 app.MapCoursesEndpoints();
 
-app.MapLoginEndpoints();
 
 app.Run();

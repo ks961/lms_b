@@ -11,7 +11,7 @@ public static class CoursesEndpoint
         
         RouteGroup.MapGet("/{CourseId}", CourseService.FetchCourseByCourseId);
 
-        RouteGroup.MapPost("", CourseService.AddCourse)
+        RouteGroup.MapPost("/", CourseService.AddCourse)
             .WithName(CourseService.PostCourseName);
 
         return RouteGroup;

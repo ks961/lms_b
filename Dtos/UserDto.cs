@@ -3,6 +3,7 @@
 namespace lms_b.Dtos;
 
 public record class UserDto(
+    string Id,
     string FName,
     string LName,
     string Email,
