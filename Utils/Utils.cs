@@ -1,4 +1,6 @@
-﻿namespace lms_b.Utils;
+﻿using System.Security.Cryptography;
+using System.Text;
+namespace lms_b.Utils;
 
 public interface IValidator<T, E>
 {
@@ -47,5 +49,17 @@ public class Result<T, E>
 
 public class Utils
 {
+    public async static Task<string> HashPassword(string password)
+    {
+        MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(password))
+        {
+            Position = 0
+        };
+
+        using SHA256 sha256 = SHA256.Create();
+
+        var hashedPassword = await sha256.ComputeHashAsync(stream);
+        return Convert.ToHexString(hashedPassword).ToLower();
+    }
 
 }

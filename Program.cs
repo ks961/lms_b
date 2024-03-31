@@ -1,5 +1,6 @@
 using lms_b;
 using lms_b.Endpoints;
+using lms_b.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -17,6 +18,14 @@ try {
 
 app.MapLoginEndpoints();
 app.MapCoursesEndpoints();
+app.MapRegisterationEndpoints();
 
+static async Task<string> func() {
+    Console.WriteLine(await Utils.HashPassword("Hello"));
+
+    return "s";
+}
+
+await func();
 
 app.Run();

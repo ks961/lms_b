@@ -1,13 +1,14 @@
 ﻿using lms_b.Utils;
-using MySqlX.XDevAPI;
 
 namespace lms_b.Data;
 
 public record class User(
-    string Data,
-    string Cookie
+    string Cookie,
+    DateTime LastLoginTime // UTC TIMESTAMP
 ) : IValidator<string, string>
 {
+    public User(string cookie) : this(cookie, DateTime.UtcNow) { }
+
     public Result<string, string> Validate()
     {
         var properties = typeof(User).GetProperties();
@@ -22,28 +23,23 @@ public record class User(
     }
 }
 
-public class LoggedInUsers
+public class ActiveSessionTracker
 {
-    private static List<User> LoggedInClients = [
-        new User(
-            "cmskdmclksdmcd",
-            "cookieevalue"
-        )
-    ];
+    private static readonly List<User> ActiveUsers = [];
 
     public static void AddClient(User User)
     {
-        LoggedInClients.Append(User);
+        _ = ActiveUsers.Append(User);
     }
 
     public static void RemoveClient(User User)
     {
-        LoggedInClients.RemoveAll(client => client.Cookie == User.Cookie);
+        ActiveUsers.RemoveAll(client => client.Cookie == User.Cookie);
     }
 
     public static bool IsThereAClient(string cookie)
     {
-        return LoggedInClients.Any(client => client.Cookie == cookie);
+        return ActiveUsers.Any(client => client.Cookie == cookie);
     }
 
 

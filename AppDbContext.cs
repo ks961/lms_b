@@ -1,4 +1,5 @@
 ﻿using lms_b.Dtos;
+using lms_b.Utils;
 using Microsoft.EntityFrameworkCore;
 namespace lms_b;
 
@@ -25,7 +26,8 @@ public class AppDbContext(string ConnectionString) : DbContext, IDisposable
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<CourseDto>().HasKey(c => c.CourseId);
+        modelBuilder.Entity<CourseDto>().HasKey(c => c.Id);
+        modelBuilder.Entity<SignupRequestDto>().HasKey(c => c.Id);
     }
 
     public bool AddCourse(CourseDto course)
@@ -48,19 +50,44 @@ public class AppDbContext(string ConnectionString) : DbContext, IDisposable
 
     }
 
-    public bool Login(UserDto user)
+    public async Task<Result<bool, string>> AddUser(SignupRequestDto user)
     {
-        if(context == null) return false;
+        if(context == null) {
+            return Result<bool, string>
+                .Err("Sorry, we're experiencing technical difficulties at the moment. Please try again later or contact support if the issue persists.");
+        }
 
         try {
-            Users.Add(user);
+
+            await context.Users.AddAsync(user);
+            await context.SaveChangesAsync();
+
+        } catch(Exception e) {
+            Console.WriteLine(e);
+            return Result<bool, string>
+                .Err("An error occurred while saving your data. Please try again later.");
+        }
+        
+        return Result<bool, string>.Ok(true);
+    }
+
+    public async Task<bool> IsUserCredentialValid(LoginRequestDto userRequest)
+    {
+
+        // Hash Password
+        var hashedPassword = await Utils.Utils.HashPassword(userRequest.Password);
+        try {
+            return await Users
+                .AnyAsync(
+                    user => user.Email == userRequest.Email && 
+                    user.Password == hashedPassword
+                );
         } catch {
             return false;
         }
-        
-        return true;
+
     }
+    public DbSet<SignupRequestDto> Users { get; set; }
 
     public DbSet<CourseDto> Courses { get; set; }
-    public DbSet<UserDto> Users { get; set; }
 }

@@ -3,6 +3,7 @@ namespace lms_b.Dtos;
 
 
 public record class CourseDto(
+    int Id,
     string CourseId,
     string CourseName,
     string CourseDescription

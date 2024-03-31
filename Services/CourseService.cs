@@ -5,6 +5,7 @@ namespace lms_b.Services;
 
 public class CourseService
 {
+    /* TODO: Use Dependency Injection */
     private static readonly AppDbContext context = AppDbContext.GetDBContext() 
         ?? throw new Exception("No database connection found.");
 

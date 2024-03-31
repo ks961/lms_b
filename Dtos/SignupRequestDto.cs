@@ -1,9 +1,10 @@
-﻿using lms_b.Utils;
+﻿using System.ComponentModel.DataAnnotations;
+using lms_b.Utils;
 
 namespace lms_b.Dtos;
 
-public record class UserDto(
-    string Id,
+public record class SignupRequestDto(
+    int Id,
     string FName,
     string LName,
     string Email,
@@ -12,7 +13,7 @@ public record class UserDto(
 {
     public Result<string, string> Validate()
     {
-         var properties = typeof(CourseDto).GetProperties();
+        var properties = typeof(CourseDto).GetProperties();
         
         foreach (var property in properties) {
             if(property.GetValue(this) == null) {
