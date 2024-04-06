@@ -1,6 +1,8 @@
 ﻿using lms_b.Dtos;
+using lms_b.Dtos.Model;
 using lms_b.Utils;
 using Microsoft.EntityFrameworkCore;
+
 namespace lms_b;
 
 public class AppDbContext(string ConnectionString) : DbContext, IDisposable
@@ -26,16 +28,18 @@ public class AppDbContext(string ConnectionString) : DbContext, IDisposable
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<CourseDto>().HasKey(c => c.Id);
+        modelBuilder.Entity<SyllabusDto>().HasNoKey();
+        modelBuilder.Entity<CourseDetailsDto>().HasKey(c => c.CourseId);
         modelBuilder.Entity<SignupRequestDto>().HasKey(c => c.Id);
     }
 
-    public bool AddCourse(CourseDto course)
+    // This one is broken
+    public bool AddCourse(CourseDetailsDto course)
     {
         if(context == null) return false;
 
         try {
-            context.Courses.Add(course);
+            context.CourseDetails.Add(course);
             context.SaveChanges();
             return true;
         } catch {
@@ -75,7 +79,8 @@ public class AppDbContext(string ConnectionString) : DbContext, IDisposable
     {
 
         // Hash Password
-        var hashedPassword = await Utils.Utils.HashPassword(userRequest.Password);
+        var hashedPassword = await Utils.Utils.HashStringValue(userRequest.Password);
+
         try {
             return await Users
                 .AnyAsync(
@@ -89,5 +94,8 @@ public class AppDbContext(string ConnectionString) : DbContext, IDisposable
     }
     public DbSet<SignupRequestDto> Users { get; set; }
 
-    public DbSet<CourseDto> Courses { get; set; }
+    public DbSet<CourseDetailsDto> CourseDetails { get; set; }
+    public DbSet<QuizDto> Quizzes { get; set; }
+    public DbSet<QuizDataDto> QuizData { get; set; }
+    public DbSet<SyllabusDto> Syllabus { get; set; }
 }

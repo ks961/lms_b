@@ -9,7 +9,7 @@ public class RegisterationService
         ?? throw new Exception("Database Error: No connection established"); 
     public async static Task<Result<bool, string>> RegisterUser(SignupRequestDto user)
     {
-        string hashedPassword = await Utils.Utils.HashPassword(user.Password);
+        string hashedPassword = await Utils.Utils.HashStringValue(user.Password);
 
         return await DBContext.AddUser(
             new SignupRequestDto(

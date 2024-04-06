@@ -1,4 +1,5 @@
-﻿using lms_b.Services;
+﻿using lms_b.Dtos;
+using lms_b.Services;
 
 namespace lms_b.Controllers;
 
@@ -21,14 +22,37 @@ public class LoginEndpointController
             // context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             // await context.Response.WriteAsync("Error");
 
-            return Results.Unauthorized();
+            var failedResponse = new ResponseDto(
+                "Authentication Failure: Login Failed, Invalid Credentials",
+                false
+            );
+
+            return Results.Ok(failedResponse);
         }
 
-        string cookieString = LoginService.GenerateSessionCookie(userRequest);
+        try {
 
-        context.Response.Headers.Append("Set-Cookie", cookieString);
+            string cookieString = LoginService.GenerateSessionCookie(userRequest);
+            context.Response.Headers.Append("Set-Cookie", cookieString);
 
-        return Results.Ok();
+            var successResponse = new ResponseDto(
+                "Authentication Success: Login Successfull",
+                true
+            );
+
+            return Results.Ok(successResponse);
+        } catch {
+
+            var failedResponse = new ResponseDto(
+                "Authentication Failure: Something went wrong!",
+                false
+            );
+
+            return Results.Ok(failedResponse);
+
+        }
+
+
     }
 
 

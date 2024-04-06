@@ -1,17 +1,17 @@
 ﻿using lms_b.Utils;
-namespace lms_b.Dtos;
 
+namespace lms_b.Dtos.Model;
 
-public record class CourseDto(
+public record class QuizDataDto(
     int Id,
-    string CourseId,
-    string CourseName,
-    string CourseDescription
+    string QuizId,
+    string Question,
+    string Options
 ) : IValidator<string, string>
 {
-    public Result<string, string> Validate()
+   public Result<string, string> Validate()
     {
-        var properties = typeof(CourseDto).GetProperties();
+        var properties = typeof(QuizDataDto).GetProperties();
         
         foreach (var property in properties) {
             if(property.GetValue(this) == null) {

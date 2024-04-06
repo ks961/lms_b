@@ -1,12 +1,11 @@
 ﻿using lms_b.Controllers;
 using lms_b.Middlewares;
-using Microsoft.Net.Http.Headers;
 
-namespace lms_b;
+namespace lms_b.Endpoints;
 
 public static class LoginEndpoints
 {
-    private static readonly LoginEndpointController Controller = new LoginEndpointController(); 
+    private static readonly LoginEndpointController Controller = new LoginEndpointController();
     public static RouteGroupBuilder MapLoginEndpoints(this WebApplication app)
     {
         RouteGroupBuilder RouteGroup = app.MapGroup("login");
@@ -15,7 +14,7 @@ public static class LoginEndpoints
 
         RouteGroup.MapPost("/verify", Controller.VerifyAuthenticationTokenController)
             .AddEndpointFilter(AuthMiddleware.Authenticate);
-              
+
 
         return RouteGroup;
     }

@@ -1,6 +1,4 @@
 ﻿using lms_b.Middlewares;
-using lms_b.Utils;
-using Microsoft.EntityFrameworkCore;
 
 namespace lms_b.Services;
 
@@ -17,24 +15,28 @@ public class LoginService
 
     public static string GenerateSessionCookie(LoginRequestDto userRequest)
     {
+        var currentDateTime = DateTime.UtcNow;
+
+        string timestamp = currentDateTime.ToUniversalTime().ToString("R");
+
         var user = new Dictionary<string, string>
         {
             { "email", userRequest.Email },
-            { "role", "student" }
+            {"timestamp", timestamp},
+            { "role", "student" } // Temporary
         };
 
-        string jwtToken = JWTService.GenerateJwtToken(
+        string cookieValue = JWTService.GenerateJwtToken(
             "/login",
             "lms_f",
             user,
             SessionTimout
         );
 
-        var cookieValue = jwtToken;
-        var expiration = DateTime.UtcNow.AddMinutes(SessionTimout);
-
+        var expirationDateTimeAsStr = currentDateTime.AddMinutes(SessionTimout)
+            .ToUniversalTime().ToString("R");
         var cookieString = 
-            $"{AuthMiddleware.CookieName}={cookieValue}; Expires={expiration.ToUniversalTime().ToString("R")}; HttpOnly";
+            $"{AuthMiddleware.CookieName}={cookieValue}; Expires={expirationDateTimeAsStr}; HttpOnly";
         
         return cookieString;
     }

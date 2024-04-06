@@ -49,17 +49,17 @@ public class Result<T, E>
 
 public class Utils
 {
-    public async static Task<string> HashPassword(string password)
+    public async static Task<string> HashStringValue(string value)
     {
-        MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(password))
+        MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(value))
         {
             Position = 0
         };
 
         using SHA256 sha256 = SHA256.Create();
 
-        var hashedPassword = await sha256.ComputeHashAsync(stream);
-        return Convert.ToHexString(hashedPassword).ToLower();
+        var hashedStringValue = await sha256.ComputeHashAsync(stream);
+        return Convert.ToHexString(hashedStringValue).ToLower();
     }
 
 }

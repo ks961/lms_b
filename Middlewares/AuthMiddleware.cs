@@ -28,7 +28,7 @@ public class AuthMiddleware
             
             if (result.IsErr)
                 UnAuthorizeRequest(context.HttpContext, result.Error ?? "");
-
+            
         } catch {
             UnAuthorizeRequest(context.HttpContext, "Bad Authentication Request" ?? "");
         }
